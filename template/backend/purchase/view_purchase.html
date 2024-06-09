@@ -1,0 +1,90 @@
+{% extends 'backend/master.html' %} {% block title %}View Purchase{% endblock title %} {% load static %} {% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>View Purchase</h1>
+      </div>
+      <div class="col-sm-6">
+        <a href="{% url 'list_purchase' %}">
+          <button class="btn btn-sm btn-success float-right">Purchase List</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Purchase Details Card -->
+    <div class="card card-default">
+      <div class="card-body">
+        <div class="container-fluid">
+          <!-- Purchase Information Table -->
+          <table class="table table-bordered table-sm">
+            <tr>
+              <td width="15%">Purchase No</td>
+              <td width="35%">{{ purchase.purchase_no }}</td>
+              <td width="15%">Date</td>
+              <td width="35%">{{ purchase.purchase_date }}</td>
+            </tr>
+            <tr>
+              <td width="15%">Reference</td>
+              <td width="35%">{{ purchase.referance }}</td>
+              <td width="15%">Supplier</td>
+              <td width="35%">{{ purchase.supplier.name }}</td>
+            </tr>
+            <tr>
+              <td width="15%">Paid By</td>
+              <td width="35%">{{ account.credit.name}}</td>
+              <td width="15%"></td>
+              <td width="35%"></td>
+            </tr>
+          </table>
+
+          <!-- Product Details Table -->
+          <table id="product-table" class="table table-bordered table-sm">
+            <thead class="text-center">
+              <tr>
+                <th width="10%">SL</th>
+                <th width="40%">Product</th>
+                <th width="20%">Rate</th>
+                <th width="10%">Qty</th>
+                <th width="20%">Sub Total</th>
+              </tr>
+            </thead>
+            <tbody id="product-fields">
+              {% for stock in purchase.purchase_stock.all %}
+              <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>{{ stock.product.name }}</td>
+                <td class="text-center">{{ stock.price }}</td>
+                <td class="text-center">{{ stock.quantity_in }}</td>
+                <td class="text-center">{{ stock.subtotal_purchase }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <!-- Grand Total Table -->
+          <table class="table table-bordered table-sm">
+            <tr>
+              <td width="80%" class="text-right"><strong>Grand Total:</strong></td>
+              <td width="20%" class="text-center">
+                <strong><span id="total">{{ total_price }}</span></strong>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock content %}

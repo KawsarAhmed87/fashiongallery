@@ -1,0 +1,251 @@
+{% load static %}
+<div class="sidebar">
+  <!-- Sidebar user (optional) -->
+  <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="image">
+      <img src="{% static 'backend/dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image" />
+    </div>
+    <div class="info">
+      <a href="#" class="d-block">Alexander Pierce</a>
+    </div>
+  </div>
+
+  <!-- SidebarSearch Form -->
+  <div class="form-inline">
+    <div class="input-group" data-widget="sidebar-search">
+      <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search" />
+      <div class="input-group-append">
+        <button class="btn btn-sidebar">
+          <i class="fas fa-search fa-fw"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Menu -->
+  <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <!-- Add icons to the links using the .nav-icon class
+         with font-awesome or any other icon font library -->
+      <li class="nav-item">
+        <a href="{% url 'dashboard' %}" class="nav-link {% if link == 'dashboard' %}active {% else %}{% endif %}">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <p>Dashboard</p>
+        </a>
+      </li>
+      <li class="nav-item {% if link == 'list_category' or link == 'create_category' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_category' or link == 'create_category' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Category
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_category' %}" class="nav-link {% if link == 'list_category' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_category' %}" class="nav-link {% if link == 'create_category' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-item {% if link == 'list_brand' or link == 'create_brand' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_brand' or link == 'create_brand' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Brand
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_brand' %}" class="nav-link {% if link == 'list_brand' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_brand' %}" class="nav-link {% if link == 'create_brand' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-item {% if link == 'list_colour' or link == 'create_colour' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_colour' or link == 'create_colour' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Colour
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_colour' %}" class="nav-link {% if link == 'list_colour' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_colour' %}" class="nav-link {% if link == 'create_colour' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-item {% if link == 'list_size' or link == 'create_size' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_size' or link == 'create_size' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Size
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_size' %}" class="nav-link {% if link == 'list_size' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_size' %}" class="nav-link {% if link == 'create_size' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item {% if link == 'list_tag' or link == 'create_tag' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_tag' or link == 'create_tag' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Tag
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_tag' %}" class="nav-link {% if link == 'list_tag' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_tag' %}" class="nav-link {% if link == 'create_tag' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item {% if link == 'list_product' or link == 'create_product' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_product' or link == 'create_product' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Product
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_product' %}" class="nav-link {% if link == 'list_product' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_product' %}" class="nav-link {% if link == 'create_product' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item {% if link == 'list_item_account' or link == 'create_item_account' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_item_account' or link == 'create_item_account' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Item account
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_item_account' %}" class="nav-link {% if link == 'list_item_account' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_item_account' %}" class="nav-link {% if link == 'create_item_account' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item {% if link == 'list_purchase' or link == 'create_purchase' %}menu-open{% endif %}">
+        <a href="#" class="nav-link {% if link == 'list_purchase' or link == 'create_purchase' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>
+            Purchase
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{% url 'list_purchase' %}" class="nav-link {% if link == 'list_purchase' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>List</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'create_purchase' %}" class="nav-link {% if link == 'create_purchase' %}active{% endif %}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item {% if link == 'list_order' %}menu-open{% endif %}">
+        <a href="{% url 'list_order' %}" class="nav-link {% if link == 'list_order' %}active{% endif %}">
+          <i class="nav-icon fas fa-file"></i>
+          <p>Order</p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'profile' %}" class="nav-link">
+          <i class="nav-icon fas fa-file"></i>
+          <p>Profile</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'group_list' %}" class="nav-link">
+          <i class="nav-icon fas fa-file"></i>
+          <p>Group</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'role_list' %}" class="nav-link">
+          <i class="nav-icon fas fa-file"></i>
+          <p>Role</p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.sidebar-menu -->
+</div>

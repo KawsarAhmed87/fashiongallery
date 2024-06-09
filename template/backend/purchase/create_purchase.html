@@ -1,0 +1,289 @@
+{% extends 'backend/master.html' %} {% block title %}Create purchase{% endblock title %} {% load static %} {% block style %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+
+<style>
+  .select2-container--default .select2-selection--single {
+    padding-block: 3px;
+  }
+  .select2-container--default .select2-selection--single {
+    height: 40px;
+  }
+</style>
+{% endblock style %} {% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Create new purchase</h1>
+      </div>
+      <div class="col-sm-6">
+        <a href="{% url 'list_purchase' %}"><button class="btn btn-button btn-sm btn-success float-right">Purchase list</button></a>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- SELECT2 EXAMPLE -->
+    <div class="card card-default">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="container-fluid">
+            <table class="table table-bordered table-sm">
+              <tr>
+                <td width="15%">Purchase no</td>
+                <td width="35%">
+                  <input type="text" value="{{purchase_no}}" name="purchase_no" class="form-control" readonly />
+                  <span class="text-danger">{{form.purchase_no.errors}}</span>
+                </td>
+                <td width="15%">Date</td>
+                <td width="35%">
+                  <input type="date" name="purchase_date" class="form-control" />
+                  <span class="text-danger">{{form.purchase_date.errors}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%">Paid by</td>
+                <td width="35%">
+                  <select class="form-control select2" name="paid_by">
+                    <option value="cash">Cash</option>
+                    <option value="account-payable">Account payable</option>
+                  </select>
+                </td>
+                <td width="15%">Supplier</td>
+                <td width="35%">
+                  <select class="form-control select2" name="supplier">
+                    <option></option>
+                    {% for supplier in suppliers %}
+                    <option value="{{supplier.id}}">{{supplier.name}}</option>
+                    {% endfor %}
+                  </select>
+                  <span class="text-danger">{{form.supplier.errors}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td width="15%">Referance</td>
+                <td width="35%">
+                  <input type="text" name="referance" class="form-control" placeholder="Enter Referance" />
+                  <span class="text-danger">{{form.referance.errors}}</span>
+                </td>
+                <td width="15%"></td>
+                <td width="35%"></td>
+              </tr>
+              <tr></tr>
+            </table>
+            <table id="product-table" class="table table-bordered table-sm">
+              <thead class="text-center">
+                <tr>
+                  <th width="40%">Product</th>
+                  <th width="10%">Qty</th>
+                  <th width="20%">Rate</th>
+                  <th width="15%">Amount</th>
+                  <th width="15%">Action</th>
+                </tr>
+              </thead>
+              <tbody id="product-fields"></tbody>
+            </table>
+            <table class="table table-bordered table-small">
+              <tr>
+                <td width="30%"><button id="add-button" class="btn btn-primary form-control">Add</button></td>
+                <td></td>
+                <td width="40%" class="text-right">Grand Total:</td>
+                <td width="30%" class="text-center">
+                  <p>
+                    <strong>$<span id="total">0.00</span></strong>
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+            <table class="table table-bordered">
+              <tr>
+                <td><button id="submit-button" class="btn btn-success form-control" type="submit">Submit</button></td>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+{% endblock content %} {% block js %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+      var maxFields = {{ products|length }}; // Maximum number of input fields
+      var addButton = $("#add-button");
+      var wrapper = $("#product-fields");
+      var x = 0; // Initial field counter
+
+      // Hide the submit button initially
+      $('#submit-button').hide();
+
+      // Function to create the field HTML
+      function createFieldHTML() {
+          return `<tr>
+                      <td>
+                          <div class="form-group">
+                              <select name="product_id[]" class="form-control product-select">
+                                  <option value="" selected disabled>-- Select Product --</option>
+                                  {% for product in products %}
+                                  <option value="{{ product.id }}" data-price="{{ product.purchase_price }}">{{ product.name }}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </td>
+                      <td>
+                          <div class="form-group">
+                              <input type="number" name="purchase_quantity[]" class="form-control quantity" min="1" value="1">
+                          </div>
+                      </td>
+                      <td>
+                          <div class="form-group">
+                              <input type="number" name="purchase_price[]" class="form-control text-center price" min="0" step="0.01">
+                          </div>
+                      </td>
+                      <td>
+                          <div class="form-group">
+                              <input type="text" class="form-control text-center subtotal" readonly>
+                          </div>
+                      </td>
+                      <td>
+                          <div class="form-group">
+                              <button class="btn btn-danger delete-button" type="button">Delete</button>
+                          </div>
+                      </td>
+                  </tr>`;
+      }
+
+      // Function to update the subtotal field based on the quantity and price
+      function updateSubtotal() {
+          wrapper.find('tr').each(function() {
+              var productSelect = $(this).find('.product-select');
+              var priceField = $(this).find('.price');
+              var quantityField = $(this).find('.quantity');
+              var subtotalField = $(this).find('.subtotal');
+
+              var selectedOption = productSelect.find('option:selected');
+              var productPrice = parseFloat(selectedOption.attr('data-price')) || 0;
+              var customPrice = parseFloat(priceField.val());
+              var quantity = parseInt(quantityField.val());
+
+              if (!isNaN(customPrice) && customPrice > 0) {
+                  productPrice = customPrice;
+              }
+
+              if (!isNaN(productPrice) && !isNaN(quantity)) {
+                  var subtotal = productPrice * quantity;
+                  subtotalField.val(subtotal.toFixed(2));
+              } else {
+                  subtotalField.val('');
+              }
+          });
+
+          updateTotal();
+      }
+
+      // Function to update the total field
+      function updateTotal() {
+          var total = 0;
+          wrapper.find('.subtotal').each(function() {
+              var subtotal = parseFloat($(this).val());
+              if (!isNaN(subtotal)) {
+                  total += subtotal;
+              }
+          });
+
+          $('#total').text(total.toFixed(2));
+
+          // Show or hide the submit button based on the product selection
+          if (wrapper.find('.product-select option:selected').length > 0) {
+              $('#submit-button').show();
+          } else {
+              $('#submit-button').hide();
+          }
+      }
+
+      // Initialize Select2 for the existing select elements
+      function initializeSelect2() {
+          wrapper.find('.product-select').select2();
+      }
+
+      // Add button click event
+      addButton.click(function(e) {
+          e.preventDefault();
+          console.log("Add button clicked");
+          if (x < maxFields) {
+              x++;
+              var fieldHTML = createFieldHTML();
+              wrapper.append(fieldHTML);
+
+              // Initialize Select2 for the new select element
+              initializeSelect2();
+
+              // Update the subtotal and total when a new field is added
+              wrapper.find('.product-select:last').on('change', function() {
+                  updateSubtotal();
+              });
+
+              wrapper.find('.quantity:last, .price:last').on('input', function() {
+                  updateSubtotal();
+              });
+
+              // Hide the add button if maximum fields reached
+              if (x === maxFields) {
+                  addButton.hide();
+              }
+
+              // Delete button click event
+              wrapper.find('.delete-button:last').click(function(e) {
+                  e.preventDefault();
+                  $(this).closest('tr').remove();
+                  x--;
+
+                  if (x < maxFields) {
+                      addButton.show();
+                  }
+
+                  // Update the total when a field is removed
+                  updateTotal();
+              });
+          }
+      });
+
+      // Update the subtotal and total when a product selection changes
+      $(document).on('change', '.product-select', function() {
+          var selectedOption = $(this).find('option:selected');
+          var priceField = $(this).closest('tr').find('.price');
+          var productPrice = parseFloat(selectedOption.attr('data-price')) || '';
+
+          priceField.val(productPrice.toFixed(2));
+          updateSubtotal();
+      });
+
+      // Update the subtotal and total when a quantity or price changes
+      $(document).on('input', '.quantity, .price', function() {
+          updateSubtotal();
+      });
+
+      // Initialize Select2 for the initial elements
+      initializeSelect2();
+  });
+</script>
+
+{% endblock js %}

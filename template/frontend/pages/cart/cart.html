@@ -1,0 +1,118 @@
+{% extends "frontend/master.html" %} {% load static %} {% block style %} {% endblock style %} {% block content %} {% include 'frontend/pages/partials/header.html' %}
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mt-2">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 70px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+  </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Cart Start -->
+<div class="container-fluid pt-3">
+  <div class="row px-xl-5">
+    <div class="col-lg-8 table-responsive mb-5">
+      <table class="table table-bordered text-center table-sm">
+        <thead class="bg-secondary text-dark">
+          <tr>
+            <th>Image</th>
+            <th>name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sub total</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody class="align-middle">
+          {% for data in cart %}
+
+          <tr>
+            <td class="align-middle"><img src="{{data.image}}" class="img-fluid" alt="" style="height: 70px; width: 70px" /></td>
+            <td class="align-middle">
+              {{data.name}} <br /><small><em>({{data.info}})</em></small>
+            </td>
+            <td class="align-middle">${{data.price}}</td>
+            <td class="align-middle">
+              <div class="input-group quantity mx-auto" style="width: 100px">
+                <div class="input-group-btn">
+                  <form method="POST" action="{% url 'update_cart' forloop.counter0 %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="subtract" />
+                    <input class="btn btn-sm btn-primary btn-minus" type="submit" value="-" />
+                  </form>
+                </div>
+                <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{data.quantity}}" readonly />
+                <div class="input-group-btn">
+                  <form method="POST" action="{% url 'update_cart' forloop.counter0 %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add" />
+                    <input class="btn btn-sm btn-primary btn-plus" type="submit" value="+" />
+                  </form>
+                </div>
+              </div>
+            </td>
+            <td class="align-middle">${{ data.subtotal }}</td>
+            <td class="align-middle">
+              <a href="{% url 'remove_from_cart' forloop.counter0 %}"
+                ><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button
+              ></a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">Cart is empty</td>
+          </tr>
+
+          <tr>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-4">
+      {% if request.session.cart_data.discount %} {% else %}
+      <form class="mb-5" action="" method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+          <input type="text" class="form-control p-4" name="coupon" placeholder="Coupon Code" required />
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Apply Coupon</button>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+      <div class="card border-secondary mb-5">
+        <div class="card-header bg-secondary border-0">
+          <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-3 pt-1">
+            <h6 class="font-weight-medium">Total</h6>
+            <h6 class="font-weight-medium">${{ request.session.cart_data.total}}</h6>
+          </div>
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-medium">Shipping</h6>
+            <h6 class="font-weight-medium">+${{ request.session.cart_data.shipping}}</h6>
+          </div>
+          {% if request.session.cart_data.discount %}
+
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-medium">Disount</h6>
+            <h6 class="font-weight-medium">-${{ request.session.cart_data.discount}}</h6>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer border-secondary bg-transparent">
+          <div class="d-flex justify-content-between mt-2">
+            <h5 class="font-weight-bold">Total</h5>
+            <h5 class="font-weight-bold">${{ request.session.cart_data.net_total}}</h5>
+          </div>
+          <a href="{% url 'checkout' %}"><button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Cart End -->
+
+{% endblock content %} {% block js %} {% endblock js %}

@@ -1,0 +1,249 @@
+{% extends 'backend/master.html' %}
+
+{% block title %}View product{% endblock title %}
+
+{% load static %}
+
+{% block style %}
+
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static 'backend/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<style>
+    .select2-container--default .select2-selection--multiple .select2-selection__choice{
+        background-color: #007bff;
+        border-color: #006fe6;
+        color: #fff;
+        padding: 0 10px;
+        margin-top: 0.31rem;
+    
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
+        margin-right: 5px;
+      }
+    
+      .select2-container--default .select2-selection--single{
+        padding-block: 3px;
+    
+      }
+      .select2-container--default .select2-selection--single{
+        height: 40px
+      }
+</style>
+{% endblock style %}
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Product details</h1>
+          </div>
+          <div class="col-sm-6">
+            <a href="{% url 'list_product' %}"><button class="btn btn-button btn-sm btn-success float-right">Product list</button></a>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default">
+
+          <div class="card-body">
+
+            
+            <!-- start row -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control"  value="{{product.name}}" disabled>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="category">Category</label><br>
+                  <input type="text" class="form-control"  value="{{product.category.name}}" disabled />
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- end row -->
+
+
+            <!-- start row -->
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="tag">Tag</label>
+                    <select class="select2" name="tags" multiple="multiple"  style="width: 100%;" disabled>
+                        {% for tag in tags %}
+                        <option value="{{tag.id}}" {% for data in product.tags.all %} {% if tag.id == data.id %}selected{% endif %} {% endfor %}>{{tag.name}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="brand">Brand</label><br>
+                    <input type="text" class="form-control"  value="{{product.brand.name}}" disabled />
+                  </div>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- end row -->
+
+              <!-- start row -->
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="size">Size</label>
+                    <select class="select2" name="sizes" multiple="multiple"style="width: 100%;" disabled>
+                        {% for size in sizes %}
+                        <option value="{{size.id}}" {% for data in product.sizes.all %} {% if size.id == data.id %}selected="selected"{% endif %} {% endfor %}>{{size.name}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="colour">Colour</label><br>
+                    <select class="select2" name="colours" multiple="multiple"  style="width: 100%;" disabled>
+                      {% for colour in colours %}
+                      <option value="{{colour.id}}" {% for data in product.colours.all %} {% if colour.id == data.id %}selected="selected"{% endif %} {% endfor %}>{{colour.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- end row -->
+
+                    <!-- start row -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="purchase_price">Purchase Price</label>
+                  <input type="text" class="form-control" value="{{product.purchase_price}}" disabled>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="quantity">Quantity</label><br>
+                  <input type="text" class="form-control" value="{{product.quantity}}" id="quantity" disabled>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- end row -->
+
+               <!-- start row -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="price">Sale Price</label>
+                  <input type="text" class="form-control" value="{{product.price}}" disabled>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="discount_price">Discount price</label><br>
+                  <input type="text" class="form-control"  value="{{product.discount_price}}" disabled>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- end row -->
+
+
+             <!-- start row -->
+             <div class="row">
+
+              <div class="col-md-4">
+                <div class="form-group">
+                <label for="preview">Image preview</label><br>
+                <img id="preview" {% if product.image %} src="{{product.image.url}}" {% endif %} style="height:100px; width:100px; border:1px solid black">
+                </div>
+              </div>
+              <!-- /.col -->
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="featured">Feature</label><br>
+                  <input type="checkbox" name="featured" {% if product.featured == True %}checked{% endif %} id="featured" disabled/>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- end row -->
+
+               <!-- start row -->
+               <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="info">Short info</label>
+                    <textarea class="form-control" id="info" disabled>{{product.info}} </textarea>
+                  </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="description">Description</label><br>
+                    <textarea  class="form-control"  id="description" disabled>{{product.description}}</textarea>
+                  </div>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- end row -->
+
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+
+
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  function previewImage(event) {
+    var input = event.target;
+    var preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(input.files[0]);
+    preview.style.display = "block";
+  }
+  </script>
+
+  <!-- Select2 -->
+<script src="{% static 'backend/plugins/select2/js/select2.full.min.js' %}"></script>
+<script>
+  $(function () {
+     //Initialize Select2 Elements
+    $('.select2').select2()
+
+ 
+  })
+</script>
+  
+{% endblock js %}
+
+

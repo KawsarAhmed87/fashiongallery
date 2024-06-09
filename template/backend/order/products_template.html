@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <title>Product List Template</title>
+  <style>
+    table {
+        border: 1px solid #000;
+        border-collapse: collapse;
+      }
+      
+      th, td {
+        border: 1px solid #000;
+        padding: 3px;
+        text-align: center;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="content">
+      <div class="container-fluid">
+        <div class="card card-default">
+          <div class="card-body">
+            <div class="container">
+              <table class="table">
+                <thead class="text-center">
+                <tr>
+                  <th style="width:15%">Order no</th>
+                  <th style="width:35%">{{ order.order_no }}</th>
+                  <th style="width:15%">Date</th>
+                  <th style="width:35%">{{ order.order_date }}</th>
+                </tr>
+              </thead>
+                <tr>
+                  <td style="width:15%">Buyer</td>
+                  <td style="width:35%">{{ order.customer.name }}</td>
+                  <td style="width:15%">Address</td>
+                  <td style="width:35%">{{ order.customer.phone }}, {{ order.customer.address }}</td>
+                </tr>
+              </table>
+              <br>
+              <table id="product-table" class="table">
+                <thead class="text-center">
+                  <tr>
+                    <th width="10%">SL</th>
+                    <th width="40%">Product</th>
+                    <th width="20%">Rate</th>
+                    <th width="10%">Qty</th>
+                    <th width="20%">Sub total</th>
+                  </tr>
+                </thead>
+                <tbody id="product-fields">
+                  {% for stock in order.order_stock.all %}
+                  <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ stock.product.name }}</td>
+                    <td class="text-center">{{ stock.price }}</td>
+                    <td class="text-center">{{ stock.quantity_out }}</td>
+                    <td class="text-center">{{ stock.subtotal_sale }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <table class="table table-bordered table-small">
+                <tr>
+                  <td width="80%" class="text-right">Grand Total:</td>
+                  <td width="20%" class="text-center"><p><strong><span id="total"></span></strong></p></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

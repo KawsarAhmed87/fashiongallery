@@ -1,0 +1,102 @@
+{% extends 'backend/master.html' %}
+
+{% block title %}Update tag{% endblock title %}
+
+{% load static %}
+
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Update tag</h1>
+          </div>
+          <div class="col-sm-6">
+            <a href="{% url 'list_tag' %}"><button class="btn btn-button btn-sm btn-success float-right">Tag list</button></a>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default">
+
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <!-- start row -->
+
+                  {% if form.non_field_errors %}
+                  {% for error in form.non_field_errors %}
+                  <div class="alert danger">
+                      <p class="text-danger">
+                          {{error}}
+                      </p>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="name">Tag name</label>
+                  <input type="text" class="form-control" {% if form.is_bound %} value="{{form.name.value}}" {% else %} value="{{tag.name}}" {% endif %} id="name" name="name" placeholder="Enter tag name">
+                  <span class="text-danger">{{form.name.errors}}</span>
+                </div>
+              </div>
+              <!-- /.col -->
+
+            </div>
+            <!-- end row -->
+
+
+ 
+            <br>
+
+             <!-- start row -->
+             <div class="row">            
+              <div class="col-md-12">
+                 <div class="form-group">
+                  <input type="submit" class="form-control btn btn-success" name="Submit">
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- end row -->
+
+          </form>
+
+
+
+
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+
+
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  function previewImage(event) {
+    var input = event.target;
+    var preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(input.files[0]);
+    preview.style.display = "block";
+  }
+  </script>
+{% endblock js %}
+

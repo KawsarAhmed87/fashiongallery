@@ -1,0 +1,87 @@
+{% extends 'backend/master.html' %} {% block title %}View order{% endblock title %} {% load static %} {% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>View order</h1>
+      </div>
+      <div class="col-sm-6">
+        <a href="{% url 'list_order' %}">
+          <button class="btn btn-button btn-sm btn-success float-right">Order list</button>
+        </a>
+        <a href="{% url 'render_pdf' order.id %}" target="_blank">
+          <button class="btn btn-button btn-sm btn-success float-right mr-1">Pdf</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- SELECT2 EXAMPLE -->
+    <div class="card card-default">
+      <div class="card-body">
+        <div class="container">
+          <table class="table table-bordered table-sm">
+            <tr>
+              <td width="15%">Order no</td>
+              <td width="35%">{{order.order_no}}</td>
+              <td width="15%">Date</td>
+              <td width="35%">{{order.order_date}}</td>
+            </tr>
+            <tr>
+              <td width="15%">Buyer</td>
+              <td width="35%">{{order.customer.name}}</td>
+              <td width="15%">Address</td>
+              <td width="35%">{{order.customer.phone}}, {{order.customer.address}}</td>
+            </tr>
+            <tr></tr>
+          </table>
+          <table id="product-table" class="table table-bordered table-sm">
+            <thead class="text-center">
+              <tr>
+                <th width="10%">SL</th>
+                <th width="40%">Product</th>
+                <th width="20%">Rate</th>
+                <th width="10%">Qty</th>
+                <th width="20%">Sub total</th>
+              </tr>
+            </thead>
+            <tbody id="product-fields">
+              {% for stock in order.order_stock.all %}
+              <tr>
+                <td class="text-center">{{forloop.counter}}</td>
+                <td>{{stock.product.name}}</td>
+                <td class="text-center">{{stock.price}}</td>
+                <td class="text-center">{{stock.quantity_out}}</td>
+                <td class="text-center">{{stock.subtotal_sale}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <table class="table table-bordered table-small">
+            <tr>
+              <td width="80%" class="text-right">Grand Total:</td>
+              <td width="20%" class="text-center">
+                <p>
+                  <strong><span id="total"></span></strong>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+{% endblock content %}

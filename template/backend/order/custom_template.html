@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .product {
+            margin-bottom: 20px;
+        }
+
+        .product .name {
+            font-weight: bold;
+        }
+
+        .product .image {
+            max-width: 200px;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product List</h1>
+    {% for product in products %}
+    <div class="product">
+        <h2 class="name">{{ product.name }}</h2>
+        <p class="description">{{ product.description }}</p>
+        <img src="{{ product.image.url }}" class="image">
+    </div>
+    {% endfor %}
+</body>
+</html>
