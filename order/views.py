@@ -225,9 +225,11 @@ def list_order(request):
 def view_order(request, id):
     order = get_object_or_404(Order, id=id)
     stocks = order.order_stock.all()  # Retrieve all associated stocks for the purchase
+    total_price = sum(item.quantity_out * item.price for item in stocks)
     context = {
         'order': order,
-        'stocks': stocks
+        'stocks': stocks,
+        'total_price' : total_price
     }
     return render(request, 'backend/order/view_order.html', context)
 
@@ -246,9 +248,12 @@ from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 from django.conf import settings
 from .models import Product
-from io import BytesIO
+import inflect
 
 
+def number_to_words(number):
+    p = inflect.engine()
+    return p.number_to_words(number, andword="").capitalize()
 
 def link_callback(uri, rel):
     """
@@ -286,8 +291,11 @@ def render_pdf_download(request, id):
     order = get_object_or_404(Order, id=id)
     stocks = order.order_stock.all()  # Retrieve all associated stocks for the purchase
     
+    total_price = sum(item.quantity_out * item.price for item in stocks)
+    total_price_in_words = number_to_words(total_price)
+    
     # Pass the products list to the template context
-    context = {'order': order, 'stocks': stocks}
+    context = {'order': order, 'stocks': stocks, 'total_price': total_price, 'total_price_in_words': total_price_in_words}
 
     # Create a Django response object with content_type set to pdf
     response = HttpResponse(content_type='application/pdf')
