@@ -13,6 +13,10 @@ from order.models import Coupon
 import random
 import string
 
+
+from django.views.decorators.csrf import csrf_exempt
+
+
 def generate_order_no():
     letters = string.ascii_uppercase
     digits = string.digits
@@ -239,7 +243,22 @@ def delete_order(request, pk):
     messages.info(request, 'Order deleted successfully.')
     return JsonResponse({'success': True})
 
+@csrf_exempt
+def toggle_order_status(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        status = request.POST.get('status') == 'true'
 
+        try:
+            order = Order.objects.get(id=order_id)
+            order.status = status
+            order.save()
+
+            return JsonResponse({'success': True, 'message': 'Status updated successfully.'})
+        except Order.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Order not found.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 import os 
 from django.http import HttpResponse
@@ -247,7 +266,7 @@ from django.template.loader import render_to_string, get_template
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 from django.conf import settings
-from .models import Product
+from product.models import Product
 import inflect
 
 

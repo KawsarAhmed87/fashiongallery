@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import User
-from product.models import Product
+
 
 # Create your models here.
 
@@ -23,6 +23,7 @@ class Order(models.Model):
     order_no = models.CharField(max_length=50, unique=True)
     customer = models.ForeignKey(User, related_name='cusomer_order', on_delete=models.CASCADE)
     address = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=False)
     payment_type = models.CharField(max_length=15, null=True, blank=True)
     total = models.DecimalField(max_digits=8, decimal_places=2)
     vat = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)

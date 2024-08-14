@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import *
+from order.views import *
 
 
 urlpatterns = [
@@ -13,6 +13,8 @@ urlpatterns = [
     path('order-list', list_order, name='list_order'),
     path ('view-order/<int:id>', view_order, name="view_order"),
     path ('delete-order/<int:pk>', delete_order, name="delete_order"),
+    
+    path('toggle_order_status/', toggle_order_status, name='toggle_order_status'),
     
     path('pdf/<int:id>', render_pdf_download, name='render_pdf'),
     
